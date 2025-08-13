@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
         print_options: printOptions,
         upload_time: new Date().toISOString(),
         status: "pending" as const,
-        expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // 24 hours from now
+        expires_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(), // 1 hours from now
       }
 
       await printJobStorage.set(otp, printJob)

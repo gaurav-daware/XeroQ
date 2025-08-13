@@ -33,7 +33,7 @@ export default function LandingPage() {
           <div className="text-center p-6">
             <FileText className="h-12 w-12 text-purple-600 mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">Secure & Fast</h3>
-            <p className="text-gray-600 text-sm">OTP-based secure access with 24-hour auto-expiry</p>
+            <p className="text-gray-600 text-sm">OTP-based secure access with 1-hour auto-expiry</p>
           </div>
         </div>
       </div>

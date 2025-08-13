@@ -77,8 +77,8 @@ export default function SuccessPage() {
               <div className="flex items-start space-x-3">
                 <Clock className="h-5 w-5 text-orange-600 mt-0.5" />
                 <div>
-                  <p className="font-semibold text-sm">Valid for 24 Hours</p>
-                  <p className="text-sm text-gray-600">This OTP will expire after 24 hours for security.</p>
+                  <p className="font-semibold text-sm">Valid for 1 Hour</p>
+                  <p className="text-sm text-gray-600">This OTP will expire after 1 hour for security.</p>
                 </div>
               </div>
             </div>
