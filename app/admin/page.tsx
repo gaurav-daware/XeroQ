@@ -140,7 +140,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 p-4 sm:p-6 lg:p-8"> {/* Added responsive padding */}
       {/* Header with Back Button */}
       <div className="flex items-center mb-6">
         <Button asChild variant="ghost" size="sm" className="mr-4">
@@ -150,7 +150,7 @@ export default function AdminPage() {
           </a>
         </Button>
       </div>
-      <div className="max-w-4xl mx-auto pt-8">
+      <div className="max-w-4xl mx-auto pt-8 px-2 sm:px-0"> {/* Ensure full width on small screens, add horizontal padding */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center mb-4">
             <Shield className="h-12 w-12 text-green-600 mr-3" />
@@ -162,16 +162,16 @@ export default function AdminPage() {
 
         <div className="grid gap-6">
           {/* OTP Lookup */}
-          <Card className="shadow-lg">
+          <Card className="shadow-lg mx-auto w-full"> {/* Ensure card takes full width */}
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-xl sm:text-2xl"> {/* Responsive font size */}
                 <Search className="h-5 w-5 mr-2" />
                 OTP Lookup
               </CardTitle>
-              <CardDescription>Enter the OTP provided by the student to retrieve their document</CardDescription>
+              <CardDescription className="text-sm sm:text-base">Enter the OTP provided by the student to retrieve their document</CardDescription>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSearch} className="flex gap-4">
+              <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 sm:gap-4"> {/* Responsive flex */}
                 <div className="flex-1">
                   <Label htmlFor="otp" className="sr-only">
                     OTP
@@ -183,10 +183,10 @@ export default function AdminPage() {
                     value={otp}
                     onChange={(e) => setOtp(e.target.value.toUpperCase())}
                     maxLength={6}
-                    className="text-center text-lg font-mono tracking-wider"
+                    className="text-center text-lg font-mono tracking-wider w-full" // Ensure input takes full width on small screens
                   />
                 </div>
-                <Button type="submit" disabled={isSearching} size="lg">
+                <Button type="submit" disabled={isSearching} size="lg" className="w-full sm:w-auto"> {/* Ensure button takes full width on small screens */}
                   {isSearching ? "Searching..." : "Search"}
                 </Button>
               </form>
@@ -195,10 +195,10 @@ export default function AdminPage() {
 
           {/* Print Job Details */}
           {printJob && (
-            <Card className="shadow-lg">
+            <Card className="shadow-lg mx-auto w-full"> {/* Ensure card takes full width */}
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center">
+                <CardTitle className="flex flex-col sm:flex-row items-start sm:items-center justify-between text-xl sm:text-2xl"> {/* Responsive flex for title and badge */}
+                  <div className="flex items-center mb-2 sm:mb-0">
                     <FileText className="h-5 w-5 mr-2" />
                     Document Found
                   </div>
@@ -206,7 +206,7 @@ export default function AdminPage() {
                     {printJob.status === "completed" ? "Completed" : "Pending"}
                   </Badge>
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-sm sm:text-base">
                   OTP: <span className="font-mono font-bold">{printJob.otp}</span> • Uploaded:{" "}
                   {new Date(printJob.uploadTime).toLocaleString()}
                 </CardDescription>
@@ -214,10 +214,10 @@ export default function AdminPage() {
               <CardContent className="space-y-6">
                 {/* File Info */}
                 <div>
-                  <h3 className="font-semibold mb-2">Document</h3>
+                  <h3 className="font-semibold mb-2 text-base sm:text-lg">Document</h3> {/* Responsive font size */}
                   <div className="flex items-center p-3 bg-gray-50 rounded-lg">
                     <FileText className="h-8 w-8 text-blue-600 mr-3" />
-                    <span className="font-medium">{printJob.filename}</span>
+                    <span className="font-medium text-sm sm:text-base break-words">{printJob.filename}</span> {/* Added break-words for long filenames */}
                   </div>
                 </div>
 
@@ -225,25 +225,25 @@ export default function AdminPage() {
 
                 {/* Print Preferences */}
                 <div>
-                  <h3 className="font-semibold mb-3 flex items-center">
+                  <h3 className="font-semibold mb-3 flex items-center text-base sm:text-lg"> {/* Responsive font size */}
                     <Printer className="h-4 w-4 mr-2" />
                     Print Preferences
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"> {/* Changed md to sm for more aggressive stacking */}
                     <div className="p-3 bg-gray-50 rounded-lg">
                       <p className="text-sm text-gray-600">Color Mode</p>
-                      <p className="font-semibold">
+                      <p className="font-semibold text-base">
                         {printJob.printOptions.colorMode === "color" ? "Color" : "Black & White"}
                       </p>
                     </div>
                     <div className="p-3 bg-gray-50 rounded-lg">
                       <p className="text-sm text-gray-600">Copies</p>
-                      <p className="font-semibold">{printJob.printOptions.copies}</p>
+                      <p className="font-semibold text-base">{printJob.printOptions.copies}</p>
                     </div>
                     {printJob.printOptions.duplex && (
                       <div className="p-3 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-600">Duplex</p>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-base">
                           {printJob.printOptions.duplex === "yes" ? "Double-sided" : "Single-sided"}
                         </p>
                       </div>
@@ -251,13 +251,13 @@ export default function AdminPage() {
                     {printJob.printOptions.paperSize && (
                       <div className="p-3 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-600">Paper Size</p>
-                        <p className="font-semibold">{printJob.printOptions.paperSize.toUpperCase()}</p>
+                        <p className="font-semibold text-base">{printJob.printOptions.paperSize.toUpperCase()}</p>
                       </div>
                     )}
                     {printJob.printOptions.imageSize && (
                       <div className="p-3 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-600">Image Sizing</p>
-                        <p className="font-semibold">
+                        <p className="font-semibold text-base">
                           {printJob.printOptions.imageSize === "fit" ? "Fit to page" : 
                            printJob.printOptions.imageSize === "fill" ? "Fill page" : "Actual size"}
                         </p>
@@ -269,13 +269,13 @@ export default function AdminPage() {
                 <Separator />
 
                 {/* Actions */}
-                <div className="flex gap-3">
-                  <Button onClick={handleDownload} className="flex-1" size="lg">
+                <div className="flex flex-col sm:flex-row gap-3"> {/* Changed to flex-col on mobile, flex-row on sm screens */}
+                  <Button onClick={handleDownload} className="w-full sm:flex-1" size="lg"> {/* Full width on mobile, then flex-1 */}
                     <Download className="h-4 w-4 mr-2" />
                     Download Document
                   </Button>
                   {printJob.status === "pending" && (
-                    <Button onClick={handleMarkCompleted} variant="outline" size="lg" className="flex-1 bg-transparent">
+                    <Button onClick={handleMarkCompleted} variant="outline" size="lg" className="w-full sm:flex-1 bg-transparent"> {/* Full width on mobile, then flex-1 */}
                       <CheckCircle className="h-4 w-4 mr-2" />
                       Mark as Printed
                     </Button>
