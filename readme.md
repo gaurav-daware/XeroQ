@@ -58,15 +58,15 @@ python main.py
 3. **Student Notifies Admin**: OTP provided at print center.
 4. **Admin Prints**: Admin uses OTP to retrieve and print instantly.
 
-## Benefits
+# Benefits
 
-# Reduced waiting times
+## Reduced waiting times
 
 - Contactless, secure printing
 - Organized digital workflow
 - Faster processing
 - Improved student experience
 
-# License
+## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
