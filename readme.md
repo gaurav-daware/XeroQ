@@ -1,0 +1,2 @@
+# Xeroq
+XeroQ is a smart queue management web app for college xerox centers. It allows students to upload documents online, select print options like color or B&amp;W, and receive a secure OTP. Xerox staff can enter this OTP on the admin panel to instantly retrieve and print the document — reducing crowd, wait time, and manual work.
