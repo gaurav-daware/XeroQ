@@ -1,0 +1,46 @@
+# Python cache & build files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py[cod]
+*.so
+
+# Virtual environments
+env/
+venv/
+ENV/
+.venv/
+.env
+.env.local
+
+# IDE & editor settings
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+*.egg
+*.egg-info/
+dist/
+build/
+
+# Supabase generated files
+.supabase/
+
+# Node (if frontend uses npm/yarn)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Frontend build (Next.js, React, Vite, etc.)
+.next/
+out/
+public/build/
