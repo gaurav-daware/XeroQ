@@ -66,7 +66,3 @@ python main.py
 - Organized digital workflow
 - Faster processing
 - Improved student experience
-
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
