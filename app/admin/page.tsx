@@ -31,12 +31,14 @@ export default function AdminPage() {
   const [otp, setOtp] = useState("")
   const [printJob, setPrintJob] = useState<PrintJob | null>(null)
   const [isSearching, setIsSearching] = useState(false)
+  const [searchError, setSearchError] = useState<string | null>(null) // NEW state for frontend error display
   const { toast } = useToast()
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!otp.trim()) {
+      setSearchError("Please enter the OTP provided by the student.")
       toast({
         title: "Enter OTP",
         description: "Please enter the OTP provided by the student.",
@@ -45,6 +47,7 @@ export default function AdminPage() {
       return
     }
 
+    setSearchError(null) // clear previous errors
     setIsSearching(true)
 
     try {
@@ -52,12 +55,14 @@ export default function AdminPage() {
 
       if (!response.ok) {
         if (response.status === 404) {
+          setSearchError("Invalid OTP or document not found.") // set visible error
           toast({
             title: "OTP not found",
             description: "Invalid OTP, expired document, or no document found with this code.",
             variant: "destructive",
           })
         } else {
+          setSearchError("Unable to search for the document. Please try again.")
           toast({
             title: "Search failed",
             description: "Unable to search for the document. Please try again.",
@@ -70,7 +75,9 @@ export default function AdminPage() {
 
       const job = await response.json()
       setPrintJob(job)
+      setSearchError(null) // clear error if successful
     } catch (error) {
+      setSearchError("Please try again later.")
       toast({
         title: "Lookup failed",
         description: "Please try again later.",
@@ -168,7 +175,9 @@ export default function AdminPage() {
                 <Search className="h-5 w-5 mr-2" />
                 OTP Lookup
               </CardTitle>
-              <CardDescription className="text-sm sm:text-base">Enter the OTP provided by the student to retrieve their document</CardDescription>
+              <CardDescription className="text-sm sm:text-base">
+                Enter the OTP provided by the student to retrieve their document
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3 sm:gap-4"> {/* Responsive flex */}
@@ -190,6 +199,10 @@ export default function AdminPage() {
                   {isSearching ? "Searching..." : "Search"}
                 </Button>
               </form>
+              {/* Show frontend error message */}
+              {searchError && (
+                <p className="mt-2 text-sm text-red-600 font-bold text-center">{searchError}</p>
+              )}
             </CardContent>
           </Card>
 
@@ -258,8 +271,11 @@ export default function AdminPage() {
                       <div className="p-3 bg-gray-50 rounded-lg">
                         <p className="text-sm text-gray-600">Image Sizing</p>
                         <p className="font-semibold text-base">
-                          {printJob.printOptions.imageSize === "fit" ? "Fit to page" : 
-                           printJob.printOptions.imageSize === "fill" ? "Fill page" : "Actual size"}
+                          {printJob.printOptions.imageSize === "fit"
+                            ? "Fit to page"
+                            : printJob.printOptions.imageSize === "fill"
+                            ? "Fill page"
+                            : "Actual size"}
                         </p>
                       </div>
                     )}
