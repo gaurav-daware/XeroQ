@@ -105,6 +105,8 @@ class SupabaseStorage {
       if (error) {
         throw error
       }
+      
+      await this.delete(otp);
 
       console.log(`Updated print job with OTP: ${otp}`)
       return true
