@@ -4,6 +4,9 @@
 
 Xeroq is a web platform that streamlines college print centers. Students upload documents/photos, set preferences, and use an OTP for contactless, queue-free printing. Admins retrieve and print instantly, reducing errors and wait times.
 
+## Live Demo
+Try Xeroq at [https://xeroq.vercel.app/](https://xeroq.vercel.app/).
+
 ## Features
 
 ### Students
