@@ -53,9 +53,9 @@ export default function StudentUploadPage() {
       }
 
       // Validate file size (max 15MB for images, 10MB for documents)
-      const maxSize = selectedFile.type.startsWith('image/') ? 15 * 1024 * 1024 : 10 * 1024 * 1024
+      const maxSize = selectedFile.type.startsWith('image/') ? 15 * 1024 * 1024 : 50 * 1024 * 1024
       if (selectedFile.size > maxSize) {
-        const maxSizeMB = selectedFile.type.startsWith('image/') ? '15MB' : '10MB'
+        const maxSizeMB = selectedFile.type.startsWith('image/') ? '15MB' : '50MB'
         toast({
           title: "File too large",
           description: `Please upload files smaller than ${maxSizeMB}.`,
@@ -181,7 +181,7 @@ export default function StudentUploadPage() {
                       <div>
                         <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
                         <p className="text-sm text-gray-600">Click to upload PDF, DOCX, or Images</p>
-                        <p className="text-xs text-gray-400 mt-1">Documents: Max 10MB | Images: Max 15MB</p>
+                        <p className="text-xs text-gray-400 mt-1">Documents: Max 50MB | Images: Max 15MB</p>
                         <p className="text-xs text-gray-400">Supported: PDF, DOCX, JPG, PNG, GIF, BMP, TIFF, WebP</p>
                       </div>
                     )}
