@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Invalid file type. Please upload PDF, DOCX, or image files." }, { status: 400 })
     }
 
-    // Validate file size (15MB for images, 10MB for documents)
-    const maxSize = file.type.startsWith('image/') ? 15 * 1024 * 1024 : 10 * 1024 * 1024
+    // Validate file size (15MB for images, 50MB for documents)
+    const maxSize = file.type.startsWith('image/') ? 15 * 1024 * 1024 : 50 * 1024 * 1024
     if (file.size > maxSize) {
       const maxSizeMB = file.type.startsWith('image/') ? '15MB' : '10MB'
       return NextResponse.json({ error: `File too large. Maximum size is ${maxSizeMB}.` }, { status: 400 })
