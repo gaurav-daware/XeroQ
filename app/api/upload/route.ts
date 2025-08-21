@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
     // Validate file size (15MB for images, 50MB for documents)
     const maxSize = file.type.startsWith('image/') ? 15 * 1024 * 1024 : 50 * 1024 * 1024
     if (file.size > maxSize) {
-      const maxSizeMB = file.type.startsWith('image/') ? '15MB' : '10MB'
+      const maxSizeMB = file.type.startsWith('image/') ? '15MB' : '50MB'
       return NextResponse.json({ error: `File too large. Maximum size is ${maxSizeMB}.` }, { status: 400 })
     }
 
