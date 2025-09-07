@@ -14,12 +14,17 @@ class Settings:
     APP_URL = os.getenv("NEXT_PUBLIC_APP_URL", "http://localhost:3000")
     DEBUG_MODE = os.getenv("DEBUG_MODE", "true").lower() == "true"
     
-    # File Upload Configuration
-    MAX_FILE_SIZE_DOCUMENTS = int(os.getenv("MAX_FILE_SIZE_DOCUMENTS", "10485760"))  # 10MB
-    MAX_FILE_SIZE_IMAGES = int(os.getenv("MAX_FILE_SIZE_IMAGES", "15728640"))  # 15MB
+    # File Upload Configuration - Updated limits
+    MAX_FILE_SIZE_PDF = int(os.getenv("MAX_FILE_SIZE_PDF", "52428800"))  # 50MB for PDFs
+    MAX_FILE_SIZE_DOCX = int(os.getenv("MAX_FILE_SIZE_DOCX", "10485760"))  # 10MB for DOCX
+    MAX_FILE_SIZE_IMAGES = int(os.getenv("MAX_FILE_SIZE_IMAGES", "15728640"))  # 15MB for images
+    
+    # Server Configuration for large files
+    MAX_REQUEST_SIZE = 100 * 1024 * 1024  # 100MB to handle 50MB PDFs with overhead
+    UPLOAD_CHUNK_SIZE = 1024 * 1024  # 1MB chunks
     
     # OTP Configuration
-    OTP_EXPIRY_HOURS = int(os.getenv("OTP_EXPIRY_HOURS", "24"))
+    OTP_EXPIRY_HOURS = int(os.getenv("OTP_EXPIRY_HOURS", "1"))
     
     @classmethod
     def validate(cls):

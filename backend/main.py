@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Request
 from fastapi.responses import StreamingResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -16,8 +16,14 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Initialize FastAPI app
-app = FastAPI(title="XeroQ Backend", version="1.0.0")
+# Initialize FastAPI app with increased limits
+app = FastAPI(
+    title="XeroQ Backend", 
+    version="1.0.0",
+    # Increase request size limits for file uploads
+    docs_url="/docs",
+    redoc_url="/redoc"
+)
 
 # Add CORS middleware to allow frontend requests
 app.add_middleware(
@@ -42,6 +48,7 @@ async def root():
 
 @app.post("/api/upload")
 async def upload_file(
+    request: Request,
     file: UploadFile = File(...),
     printOptions: str = Form(...)
 ):
@@ -53,7 +60,15 @@ async def upload_file(
         if not file:
             raise HTTPException(status_code=400, detail="No file provided")
         
-        print(f"File details: name={file.filename}, type={file.content_type}, size={file.size}")
+        # Get actual file size by reading content length from request
+        content_length = request.headers.get('content-length')
+        if content_length:
+            actual_size = int(content_length)
+            print(f"Content-Length header: {actual_size} bytes")
+        else:
+            actual_size = file.size if file.size else 0
+        
+        print(f"File details: name={file.filename}, type={file.content_type}, reported_size={file.size}, actual_size={actual_size}")
         
         # Validate file type
         allowed_types = [
@@ -74,13 +89,26 @@ async def upload_file(
                 detail="Invalid file type. Please upload PDF, DOCX, or image files."
             )
         
-        # Validate file size
-        max_size = 15 * 1024 * 1024 if file.content_type.startswith('image/') else 10 * 1024 * 1024
-        if file.size > max_size:
-            max_size_mb = '15MB' if file.content_type.startswith('image/') else '10MB'
+        # Validate file size - use actual size from content-length or file.size
+        file_size_to_check = actual_size if actual_size > 0 else (file.size if file.size else 0)
+        
+        # Updated file size limits: 50MB for PDFs, 15MB for images, 10MB for DOCX
+        if file.content_type == "application/pdf":
+            max_size = 50 * 1024 * 1024  # 50MB for PDFs
+            max_size_mb = '50MB'
+        elif file.content_type.startswith('image/'):
+            max_size = 15 * 1024 * 1024  # 15MB for images
+            max_size_mb = '15MB'
+        else:  # DOCX and other documents
+            max_size = 10 * 1024 * 1024  # 10MB for DOCX
+            max_size_mb = '10MB'
+        
+        print(f"File size check: {file_size_to_check} bytes, max allowed: {max_size} bytes ({max_size_mb})")
+        
+        if file_size_to_check > max_size:
             raise HTTPException(
                 status_code=400,
-                detail=f"File too large. Maximum size is {max_size_mb}."
+                detail=f"File too large ({file_size_to_check} bytes). Maximum size is {max_size_mb} ({max_size} bytes)."
             )
         
         # Parse print options
@@ -97,11 +125,40 @@ async def upload_file(
         
         print(f"Attempting to upload file: {unique_filename}")
         
-        # Read file content
-        file_content = await file.read()
+        # Read file content in chunks to handle large files
+        print("Reading file content...")
+        file_content = b""
+        chunk_size = 1024 * 1024  # 1MB chunks
+        bytes_read = 0
+        
+        try:
+            # Reset file pointer to beginning
+            await file.seek(0)
+            
+            while True:
+                chunk = await file.read(chunk_size)
+                if not chunk:
+                    break
+                file_content += chunk
+                bytes_read += len(chunk)
+                print(f"Read {bytes_read} bytes so far...")
+            
+            print(f"Finished reading file: {len(file_content)} bytes total")
+            
+        except Exception as read_error:
+            print(f"Error reading file: {read_error}")
+            raise HTTPException(
+                status_code=500,
+                detail=f"Error reading file: {str(read_error)}"
+            )
+        
+        # Verify file content size matches expected size
+        if file_size_to_check > 0 and len(file_content) != file_size_to_check:
+            print(f"Warning: File size mismatch. Expected: {file_size_to_check}, Got: {len(file_content)}")
         
         # Upload file to Supabase Storage
         try:
+            print(f"Uploading {len(file_content)} bytes to Supabase...")
             file_path = await storage.upload_file(file_content, unique_filename, file.content_type)
             print(f"File uploaded successfully to: {file_path}")
             
@@ -126,7 +183,8 @@ async def upload_file(
             return {
                 "success": True,
                 "otp": otp,
-                "message": "File uploaded successfully"
+                "message": "File uploaded successfully",
+                "file_size": len(file_content)
             }
             
         except Exception as upload_error:
@@ -269,7 +327,12 @@ async def health_check():
             "status": "healthy",
             "database": "connected",
             "total_jobs": total_jobs,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "file_limits": {
+                "pdf": "50MB",
+                "images": "15MB", 
+                "docx": "10MB"
+            }
         }
     except Exception as error:
         return {
@@ -279,10 +342,19 @@ async def health_check():
         }
 
 if __name__ == "__main__":
+    # Configure uvicorn with increased limits for large file uploads
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=8000,
         reload=True,
-        log_level="info"
+        log_level="info",
+        # Increase limits for large file uploads (100MB to handle 50MB PDFs)
+        limit_max_requests=1000,
+        limit_concurrency=100,
+        timeout_keep_alive=60,
+        # Increase request size limits
+        limit_request_line=8190,
+        limit_request_fields=100,
+        limit_request_field_size=8190
     )
