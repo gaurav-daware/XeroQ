@@ -28,31 +28,6 @@ Try Xeroq at [https://xeroq.vercel.app/](https://xeroq.vercel.app/).
 - **Frontend**: Next.js, Tailwind CSS / Custom CSS, Reusable Components.
 - **Backend**: Python 3.x, Flask, Supabase (for Database & Storage).
 
-## Installation & Setup
-
-### Prerequisites
-
-- Node.js & pnpm
-- Python
-
-### Frontend
-
-```bash
-cd Xeroq
-pnpm install
-pnpm dev
-```
-
-### Backend
-
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
-pip install -r requirements.txt
-python main.py
-```
 
 ## How It Works
 
