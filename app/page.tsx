@@ -11,7 +11,7 @@ export default function LandingPage() {
           <Printer className="h-16 w-16 text-blue-600 mr-4" />
           <h1 className="text-6xl font-bold text-gray-900">XeroQ</h1>
         </div>
-        <p className="text-2xl text-gray-600 mb-4">Smart Xerox Queue System</p>
+        <p className="text-2xl text-gray-600 mb-4">Upload online, skip the queue, collect your prints instantly</p>
         <p className="text-lg text-gray-500 max-w-2xl mx-auto px-4">
           Skip the queue, upload your documents online, and get them printed hassle-free at your college xerox center.
         </p>
